@@ -79,6 +79,16 @@ public class EventController {
         return eventService.updateStatus(id, EventStatus.REJECTED);
     }
 
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<?> cancelEvent(@PathVariable Long id) {
+        try {
+            Event event = eventService.updateStatus(id, EventStatus.CANCELLED);
+            return ResponseEntity.ok(event);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);

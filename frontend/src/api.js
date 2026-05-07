@@ -19,6 +19,7 @@ export const eventApi = {
   create: (data) => api.post('/events', data),
   approve: (id) => api.patch(`/events/${id}/approve`),
   reject: (id) => api.patch(`/events/${id}/reject`),
+  cancel: (id) => api.patch(`/events/${id}/cancel`),
   delete: (id) => api.delete(`/events/${id}`),
   listMyEvents: (organizerId) => api.get(`/events/my-events/${organizerId}`),
   upload: (file) => {

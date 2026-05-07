@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { eventApi, registrationApi } from '../api';
-import { Calendar, MapPin, Users, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -10,6 +10,8 @@ const EventDetails = () => {
   const [loading, setLoading] = useState(true);
   const [registering, setRegistering] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     eventApi.details(id)
@@ -33,6 +35,19 @@ const EventDetails = () => {
       })
       .catch(err => alert('Registration failed: ' + err.message))
       .finally(() => setRegistering(false));
+  };
+
+  const handleCancel = async () => {
+    if (!window.confirm('Are you sure you want to cancel this event? The venue will be freed up.')) return;
+    setCancelling(true);
+    try {
+      const res = await eventApi.cancel(id);
+      setEvent(res.data);
+    } catch (err) {
+      alert('Failed to cancel event.');
+    } finally {
+      setCancelling(false);
+    }
   };
 
   if (loading) return (
@@ -72,13 +87,31 @@ const EventDetails = () => {
                 </div>
               </div>
             </div>
-            <button 
-              onClick={handleRegister}
-              disabled={registering || success}
-              className={`btn-primary px-10 py-4 text-lg flex items-center gap-2 ${success ? 'bg-success shadow-none transform-none' : ''}`}
-            >
-              {registering ? 'Processing...' : success ? <><CheckCircle /> Registered!</> : 'Register Now'}
-            </button>
+            <div className="flex flex-wrap gap-3">
+              {event.status === 'CANCELLED' ? (
+                <span className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-error/10 text-error border border-error/20 font-bold">
+                  <XCircle size={20} /> Event Cancelled
+                </span>
+              ) : (
+                <button
+                  onClick={handleRegister}
+                  disabled={registering || success}
+                  className={`btn-primary px-10 py-4 text-lg flex items-center gap-2 ${success ? 'bg-success shadow-none transform-none' : ''}`}
+                >
+                  {registering ? 'Processing...' : success ? <><CheckCircle /> Registered!</> : 'Register Now'}
+                </button>
+              )}
+              {user && event.organizer?.id === user.id && event.status !== 'CANCELLED' && (
+                <button
+                  onClick={handleCancel}
+                  disabled={cancelling}
+                  className="px-6 py-4 rounded-2xl bg-error/10 hover:bg-error/20 text-error border border-error/20 font-bold transition-all flex items-center gap-2"
+                >
+                  <XCircle size={20} />
+                  {cancelling ? 'Cancelling...' : 'Cancel Event'}
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

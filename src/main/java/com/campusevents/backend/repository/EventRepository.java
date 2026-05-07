@@ -18,6 +18,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT COUNT(e) FROM Event e WHERE e.resource.id = :resourceId " +
            "AND e.status != 'REJECTED' " +
+           "AND e.status != 'CANCELLED' " +
            "AND e.startDatetime < :endDatetime " +
            "AND e.endDatetime > :startDatetime")
     long countOverlappingEvents(@Param("resourceId") Long resourceId,
