@@ -37,20 +37,20 @@ public class EventService {
     public Event createEvent(EventRequest req) {
         User organizer = userRepo.findById(req.getOrganizerId())
                 .orElseThrow(() -> new RuntimeException("Organizer not found"));
-        
+
         Resource resource = resourceRepo.findById(req.getResourceId())
                 .orElseThrow(() -> new RuntimeException("Resource not found"));
-        
+
         Club club = req.getClubId() != null ? clubRepo.findById(req.getClubId()).orElse(null) : null;
 
         long overlaps = eventRepo.countOverlappingEvents(
                 req.getResourceId(),
                 req.getStartDatetime(),
-                req.getEndDatetime()
-        );
+                req.getEndDatetime());
 
         if (overlaps > 0) {
-            throw new RuntimeException("This venue is already booked or has a pending request for the selected timeframe.");
+            throw new RuntimeException(
+                    "This venue is already booked or has a pending request for the selected timeframe.");
         }
 
         Event event = Event.builder()
