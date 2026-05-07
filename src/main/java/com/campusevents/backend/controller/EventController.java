@@ -60,8 +60,13 @@ public class EventController {
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody EventRequest eventRequest) {
-        return eventService.createEvent(eventRequest);
+    public ResponseEntity<?> createEvent(@RequestBody EventRequest eventRequest) {
+        try {
+            Event event = eventService.createEvent(eventRequest);
+            return ResponseEntity.ok(event);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/approve")

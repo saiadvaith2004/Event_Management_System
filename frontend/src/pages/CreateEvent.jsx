@@ -6,6 +6,7 @@ import { eventApi, resourceApi } from '../api';
 const CreateEvent = () => {
   const navigate = useNavigate();
   const [resources, setResources] = useState([]);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -58,7 +59,10 @@ const CreateEvent = () => {
       navigate('/events');
     } catch (err) {
       console.error(err);
-      alert('Failed to create event. Please check your inputs.');
+      const msg = typeof err.response?.data === 'string'
+        ? err.response.data
+        : 'Failed to create event. Please check your inputs.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -77,6 +81,11 @@ const CreateEvent = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="glass-card space-y-6">
+        {error && (
+          <div className="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-2xl flex items-center gap-3 animate-fade-in">
+            <span className="text-sm font-semibold">⚠ {error}</span>
+          </div>
+        )}
         <div className="space-y-2">
           <label className="text-sm font-semibold text-text-muted flex items-center gap-2">
             <Calendar size={16} className="text-primary" /> Event Title
