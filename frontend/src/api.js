@@ -34,6 +34,7 @@ export const eventApi = {
 export const registrationApi = {
   register: (eventId, user) => api.post(`/registrations/events/${eventId}/register`, user),
   cancel: (id) => api.post(`/registrations/${id}/cancel`),
+  getParticipants: (eventId) => api.get(`/registrations/events/${eventId}/participants`),
 };
 
 export const resourceApi = {

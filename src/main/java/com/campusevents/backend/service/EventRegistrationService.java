@@ -53,6 +53,10 @@ public class EventRegistrationService {
         }
     }
 
+    public List<EventRegistration> getParticipantsByEvent(Long eventId) {
+        return registrationRepo.findByEventIdAndStatusOrderByRegistrationDateAsc(eventId, RegistrationStatus.CONFIRMED);
+    }
+
     private void promoteFromWaitlist(Long eventId) {
         List<EventRegistration> waitlist = registrationRepo
                 .findByEventIdAndStatusOrderByRegistrationDateAsc(eventId, RegistrationStatus.WAITLISTED);

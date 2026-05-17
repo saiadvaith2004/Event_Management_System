@@ -23,4 +23,9 @@ public class RegistrationController {
     public void cancel(@PathVariable Long id) {
         registrationService.cancelRegistration(id);
     }
+
+    @GetMapping("/events/{id}/participants")
+    public java.util.List<EventRegistration> getParticipants(@PathVariable Long id) {
+        return registrationService.getParticipantsByEvent(id);
+    }
 }
