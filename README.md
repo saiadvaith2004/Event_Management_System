@@ -92,16 +92,6 @@ The Campus Events Management System solves the chaotic nature of university even
    npm run dev
    ```
 
-4. Open your browser at `http://localhost:5173`
-
-## Default Demo Accounts
-
-| Role      | Email                  | Password |
-|-----------|------------------------|----------|
-| Admin     | admin@campus.edu       | password |
-| Club Head | advaith@campus.edu     | password |
-| Student   | Register via frontend  | —        |
-
 ## UI Design
 
 The platform features a modern, responsive **mobile-first** design built with Tailwind CSS. It incorporates:
